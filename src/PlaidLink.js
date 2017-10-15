@@ -124,14 +124,13 @@ const PlaidLink = React.createClass({
   },
   render: function() {
     return (
-      <button
+      <div
         onClick={this.handleOnClick}
-        disabled={this.state.disabledButton}
         style={this.props.style}
         className={this.props.className}
       >
-        <span>{this.props.buttonText}</span>
-      </button>
+        {this.props.iconComp}
+      </div>
     );
   }
 });
