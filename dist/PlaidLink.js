@@ -37,7 +37,7 @@ var PlaidLink = React.createClass({
     // the Plaid dashboard (https://dashboard.plaid.com)
     publicKey: PropTypes.string.isRequired,
 
-    // The Plaid products you wish to use, an array containing some of connect, 
+    // The Plaid products you wish to use, an array containing some of connect,
     // auth, identity, income, transactions
     product: PropTypes.arrayOf(PropTypes.oneOf(['connect', 'auth', 'identity', 'income', 'transactions'])).isRequired,
 
@@ -92,36 +92,36 @@ var PlaidLink = React.createClass({
     console.error('There was an issue loading the link-initialize.js script');
   },
   onScriptLoaded: function onScriptLoaded() {
-    window.linkHandler = Plaid.create({
-      clientName: this.props.clientName,
-      env: this.props.env,
-      key: this.props.publicKey,
-      apiVersion: this.props.apiVersion,
-      onExit: this.props.onExit,
-      onLoad: this.handleLinkOnLoad,
-      onSuccess: this.props.onSuccess,
-      product: this.props.product,
-      selectAccount: this.props.selectAccount,
-      token: this.props.token,
-      webhook: this.props.webhook
+    this.setState({
+      disabledButton: false,
+      linkHandler: Plaid.create({
+        clientName: this.props.clientName,
+        env: this.props.env,
+        key: this.props.publicKey,
+        apiVersion: this.props.apiVersion,
+        onExit: this.props.onExit,
+        onLoad: this.handleLinkOnLoad,
+        onSuccess: this.props.onSuccess,
+        product: this.props.product,
+        selectAccount: this.props.selectAccount,
+        token: this.props.token,
+        webhook: this.props.webhook
+      })
     });
-
-    this.setState({ disabledButton: false });
   },
   handleLinkOnLoad: function handleLinkOnLoad() {
     this.props.onLoad && this.props.onLoad();
     this.setState({ linkLoaded: true });
   },
   handleOnClick: function handleOnClick() {
-    this.props.onClick && this.props.onClick();
     var institution = this.props.institution || null;
-    if (window.linkHandler) {
-      window.linkHandler.open(institution);
+    if (this.state.linkHandler) {
+      this.state.linkHandler.open(institution);
     }
   },
   exit: function exit(configurationObject) {
-    if (window.linkHandler) {
-      window.linkHandler.exit(configurationObject);
+    if (this.state.linkHandler) {
+      this.state.linkHandler.exit(configurationObject);
     }
   },
   render: function render() {
